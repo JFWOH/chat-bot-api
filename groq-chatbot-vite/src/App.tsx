@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './index.css';
-// import ChatWindow from './components/ChatWindow'; // ChatWindow não está sendo usado diretamente, App.tsx é o container principal
-import MessageList, { Message } from './components/MessageList';
-import MessageInput from './components/MessageInput';
-import ModelSelector, { AVAILABLE_GROQ_MODELS } from './components/ModelSelector'; // Importa a lista de modelos
+import MessageList from './components/MessageList';
+import type { Message } from './components/MessageList';
+import MessageInput from './components/MessageInput'; // Adicionei esta importação que estava faltando
+import ModelSelector, { AVAILABLE_GROQ_MODELS } from './components/ModelSelector';
 
 function App() {
   const [messages, setMessages] = useState<Message[]>([
@@ -60,7 +60,7 @@ function App() {
       };
       setMessages(prevMessages => [...prevMessages, botResponse]);
 
-    } catch (error) {
+    } catch (error: any) { // Adicionei a tipagem 'any' para o erro
       console.error("Erro ao enviar mensagem:", error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -92,21 +92,27 @@ function App() {
         <header className="p-4 bg-slate-700 border-b border-slate-600 text-center">
           <h1 className="text-2xl font-semibold text-sky-400">Groq Chatbot Interface</h1>
         </header>
-        
-        <ModelSelector 
-          selectedModel={selectedModel} 
-          onModelChange={handleModelChange} 
-          disabled={isLoading} 
-          models={AVAILABLE_GROQ_MODELS} // Passa a lista de modelos atualizada
-        />
+      
+        {/* Certifique-se de que selectedModel e AVAILABLE_GROQ_MODELS existem */}
+        {selectedModel && AVAILABLE_GROQ_MODELS && (
+          <ModelSelector 
+            selectedModel={selectedModel} 
+            onModelChange={handleModelChange} 
+            disabled={isLoading} 
+            models={AVAILABLE_GROQ_MODELS}
+          />
+        )}
 
-        <MessageList messages={messages} />
+        {/* Certifique-se de que messages existe */}
+        {messages && (
+          <MessageList messages={messages} />
+        )}
         <div ref={messagesEndRef} />
 
         {isLoading && (
-            <div className="p-3 text-center text-sm text-sky-400 bg-slate-700 border-t border-slate-600">
-                O modelo está pensando...
-            </div>
+          <div className="p-3 text-center text-sm text-sky-400 bg-slate-700 border-t border-slate-600">
+            O modelo está pensando...
+          </div>
         )}
 
         <MessageInput onSendMessage={handleSendMessage} disabled={isLoading} />
@@ -116,4 +122,3 @@ function App() {
 }
 
 export default App;
-

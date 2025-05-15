@@ -1,10 +1,11 @@
 import React from 'react';
 
-interface Message {
+// Defina a interface Message e exporte-a
+export interface Message {
   id: string;
   text: string;
   sender: 'user' | 'bot';
-  timestamp?: string; // Opcional, pode ser adicionado depois
+  timestamp?: string;
 }
 
 interface MessageListProps {
@@ -36,5 +37,5 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
 };
 
 export default MessageList;
-export type { Message }; // Exporta o tipo Message para ser usado em outros lugares
-
+// Remova a linha abaixo se existir
+// export type { Message };
